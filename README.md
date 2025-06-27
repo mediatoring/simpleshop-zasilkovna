@@ -1,45 +1,46 @@
-# simpleshop-zasilkovna
+# Vylepšená integrace Zásilkovny pro SimpleShop
 
-Integrace výběru pobočky Zásilkovny do Simpleshop formuláře. Tato integrace přidá do formuláře pole s možností výběru výdejny zásilkovny s vylepšeným mobilním zobrazením. Postaveno na původním kódu https://github.com/MiliusCZ/simpleshop-zasilkovna
+Pokročilá integrace výběru pobočky Zásilkovny do SimpleShop formuláře s optimalizovaným mobilním zobrazením. Řeší problémy původní integrace a přidává podporu pro responzivní design.
 
-![Ukázka](https://github.com/MiliusCZ/simpleshop-zasilkovna/blob/main/ukazka.png?raw=true)
+*Vychází z původního projektu: https://github.com/MiliusCZ/simpleshop-zasilkovna*
 
-## Co je potřeba
+![Ukázka](https://github.com/mediatoring/simpleshop-zasilkovna/blob/main/ukazka.png?raw=true)
 
-- Účet pro Simpleshop (https://www.simpleshop.cz/)
-- Účet pro Zásilkovnu (https://www.zasilkovna.cz/)
+## Požadavky
 
-## Konfigurace v Simpleshopu
+- **SimpleShop účet**: https://www.simpleshop.cz/?utm=dwso3bv
+- **Packeta/Zásilkovna účet**: https://www.packeta.com
 
-### Vytvoření variant dopravy
+## Nastavení v SimpleShop
 
-K produktu vytvořte položky doplňkového prodeje pro dopravu. Jedna z položek bude představovat dodání přes Zásilkovnu. 
+### 1. Konfigurace dopravních variant
 
-![Ukázka nastavení doplňkového prodeje](https://github.com/MiliusCZ/simpleshop-zasilkovna/blob/main/doplnkovy%20prodej.png?raw=true)
+Vytvořte v produktu položky doplňkového prodeje reprezentující různé způsoby dopravy. Jedna z nich bude představovat doručení přes Zásilkovnu.
 
-### Vytvoření políčka ve formuláři
+![Nastavení doplňkového prodeje](https://github.com/mediatoring/simpleshop-zasilkovna/blob/main/doplnkovy%20prodej.png?raw=true)
 
-V záložce *Formulář* v úpravě produktu vytvořte nové pole typu *Jednořádkový text*. Název je libovolný - například **Adresa zásilkovny**. Pole je potřeba označit jako povinné, aby zákazníci nemohli odeslat formulář bez vybrané výdejny.
+### 2. Přidání formulářového pole
 
-![Vlastní pole formuláře](https://github.com/MiliusCZ/simpleshop-zasilkovna/blob/main/vlastn%C3%AD%20pole.png?raw=true)
+V sekci *Formulář* při úpravě produktu vytvořte nové pole typu *Jednořádkový text* s názvem **Adresa zásilkovny**. **Důležité**: Označte pole jako povinné, aby zákazníci nemohli odeslat objednávku bez výběru pobočky.
 
-### Kód
+![Vlastní pole ve formuláři](https://github.com/mediatoring/simpleshop-zasilkovna/blob/main/vlastn%C3%AD%20pole.png?raw=true)
 
-Kód integrace vložte v úpravě produktu do záložky *Ostatní*, *pole JS, CSS a jiné kódy*. Před vložením je třeba v kódu upravit několik položek.
-Hodnoty je třeba vyčíst ze zdrojového kódu stránky s formulářem (například pomocí pravého kliku na pole a vybrání položky *prozkoumat*). Hodnoty hledejte v náhledu prodejního formuláře, nikoliv v editaci.
+### 3. Implementace kódu
 
-- *inputName* - název input elementu pole **Adresa zásilkovny** 
-- *hiddenFieldName* - název hidden input elementu pole **Adresa zásilkovny** 
-- *transportSelectorName* - název atributu pro výběr doplňkového prodeje 
-- *zasilkovnaValue* - pořadí zásilkovny v seznamu doplňkového prodeje. Počítá se od nuly, takže například bude-li Zásilkovna na druhém místě, hodnota je "1"
+Vložte následující kód do záložky *Ostatní* → *JS, CSS a jiné kódy* v nastavení produktu.
 
-Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem, který najdete na portálu Zásilkovny
+**Před použitím upravte tyto parametry** (hodnoty najdete v HTML kódu formuláře pomocí *Prozkoumat prvek*):
+
+- `inputName` - name atribut textového pole "Adresa zásilkovny"
+- `hiddenFieldName` - name atribut skrytého pole "Adresa zásilkovny"  
+- `transportSelectorName` - name atribut pro výběr dopravy
+- `zasilkovnaValue` - index Zásilkovny v seznamu doprav (začíná od 0)
+- `YOURAPIKEY` - váš API klíč z Packeta portálu
 
 ```html
 <style>
-/* CSS styly pro responsivní widget Zásilkovny */
+/* Responzivní styly pro mobilní zařízení */
 @media (max-width: 768px) {
-    /* Úprava kontejneru widgetu */
     #packeta-widget-frame {
         width: 100% !important;
         height: 100% !important;
@@ -52,20 +53,17 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
         border-radius: 0 !important;
     }
     
-    /* Úprava mapy v mobilu */
     #packeta-widget-frame iframe {
         width: 100% !important;
         height: 100% !important;
     }
     
-    /* Zajištění správného zobrazení vyhledávacího pole */
     .packeta-widget-search {
         font-size: 16px !important;
         padding: 10px !important;
         margin: 10px !important;
     }
     
-    /* Úprava tlačítek */
     .packeta-widget-button {
         font-size: 16px !important;
         padding: 12px 20px !important;
@@ -73,7 +71,7 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
     }
 }
 
-/* Obecné úpravy pro lepší zobrazení */
+/* Styling tlačítka pro výběr pobočky */
 .packeta-selector-open {
     background-color: #39b54a;
     color: white;
@@ -82,6 +80,7 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
 .packeta-selector-open:hover {
@@ -90,19 +89,18 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
 </style>
 
 <script type="text/javascript">
-    /* CONFIG PROPERTIES BEGIN */
+    /* === KONFIGURACE - UPRAVTE PODLE VAŠEHO FORMULÁŘE === */
     var inputName = 'payment[-::jIzui4tg::value]';
     var hiddenFieldName = 'payment[-::jIzui4tg::name]';
     var transportSelectorName = 'payment[items::1::key_radio]';
     var zasilkovnaValue = '2';
-    /* CONFIG PROPERTIES END */
+    /* === KONEC KONFIGURACE === */
 
-    // Funkce pro inicializaci Zásilkovny
     function initZasilkovna() {
         var zasilkovnaInput = document.querySelector("input[name='" + inputName + "']");
         var zasilkovnaHidden = document.querySelector("input[name='" + hiddenFieldName + "']");
 
-        // Pokud prvky ještě neexistují, zkus to znovu za chvíli
+        // Čekání na načtení formuláře
         if (!zasilkovnaInput || !zasilkovnaHidden) {
             setTimeout(initZasilkovna, 500);
             return;
@@ -110,24 +108,27 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
 
         var zasilkovnaParent = zasilkovnaInput.parentNode.parentNode;
 
+        // Vytvoření tlačítka pro výběr pobočky
         var selectZasilkovnaButton = document.createElement('button');
         selectZasilkovnaButton.textContent = 'Vybrat pobočku';
         selectZasilkovnaButton.setAttribute('class', 'packeta-selector-open');
         selectZasilkovnaButton.setAttribute('type', 'button');
 
+        // Přidání tlačítka do formuláře
         zasilkovnaInput.parentNode.insertBefore(selectZasilkovnaButton, zasilkovnaInput);
         zasilkovnaInput.setAttribute('class', 'packeta-selector-branch-name');
         zasilkovnaHidden.setAttribute('class', 'packeta-selector-branch-id');
-
         zasilkovnaInput.setAttribute('readonly', 'readonly');
         zasilkovnaInput.parentNode.style.display = 'flex';
 
+        // Logika zobrazení/skrytí pole podle výběru dopravy
         var showHideZasilkovna = function(value) {
             var state = value === zasilkovnaValue ? 'block' : 'none';
             zasilkovnaParent.style.display = state;
             zasilkovnaInput.value = state === 'block' ? '' : 'N/A';
         }
 
+        // Přidání event listenerů na výběr dopravy
         var transportSelectors = document.querySelectorAll("input[name='" + transportSelectorName + "']");
         for (var i = 0; i < transportSelectors.length; i++) {
             transportSelectors[i].addEventListener('change', function() {
@@ -138,11 +139,11 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
             }
         }
 
-        // Po úspěšné inicializaci spustit widget Packeta
+        // Inicializace Packeta widgetu
         setTimeout(initPacketaWidget, 500);
     }
 
-    // Spustit inicializaci po načtení stránky
+    // Spuštění po načtení stránky
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(initZasilkovna, 1000);
@@ -153,25 +154,23 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
 </script>
 
 <script>
-    // Konfigurace pro nový widget v6
+    // Konfigurace Packeta Widget v6
     var packetaOptions = {
         language: 'cs',
         country: 'cz',
         vendors: [
             {
                 country: 'cz',
-                group: ''  // prázdné pro normální výdejny
+                group: ''  // normální výdejny Zásilkovny
             }
         ]
     };
     
-    // Inicializace nového widgetu
     function initPacketaWidget() {
         var buttons = document.querySelectorAll('.packeta-selector-open');
         var branchNameInput = document.querySelector('.packeta-selector-branch-name');
         var branchIdInput = document.querySelector('.packeta-selector-branch-id');
         
-        // Zkontrolovat, zda prvky existují
         if (!buttons.length || !branchNameInput || !branchIdInput) {
             setTimeout(initPacketaWidget, 500);
             return;
@@ -195,23 +194,35 @@ Nahraďte řetězec YOURAPIKEY v posledním řádku skriptu Vaším API klíčem
 <script src="https://widget.packeta.com/v6/www/js/library.js"></script>
 ```
 
-## Vylepšení v této verzi
+## Klíčová vylepšení
 
-- **Responzivní mobilní zobrazení**: Widget se správně přizpůsobí velikosti mobilního zařízení
-- **Čekání na načtení**: Kód čeká na kompletní načtení SimpleShop formuláře před inicializací
-- **Widget v6**: Používá nejnovější verzi Packeta widgetu s lepší kompatibilitou
-- **Vylepšené CSS**: Zajišťuje správné zobrazení na všech zařízeních
+✅ **Mobilní optimalizace** - Widget se správně zobrazí na všech mobilních zařízeních  
+✅ **Asynchronní načítání** - Čeká na kompletní načtení SimpleShop formuláře  
+✅ **Moderní API** - Využívá nejnovější Packeta Widget v6 s lepší stabilitou  
+✅ **Responzivní design** - Automatické přizpůsobení velikosti obrazovky  
+✅ **Vylepšené UX** - Intuitivní ovládání s hover efekty
 
-## Závěrem
+## Implementace
 
-Po uložení by měla integrace fungovat na desktopu i mobilních zařízeních. Postup je třeba zopakovat pro každý produkt v Simpleshopu, který lze zasílat přes Zásilkovnu. Pokud potřebujete pomoc s nastavením, ozvěte se mi (https://milosturek.cz).
+1. **Zkopírujte a upravte** konfigurační parametry podle vašeho formuláře
+2. **Vložte kód** do SimpleShop produktu v sekci *Ostatní* → *JS, CSS a jiné kódy*
+3. **Otestujte funkčnost** na desktopu i mobilu
+4. **Opakujte proces** pro každý produkt s doručením přes Zásilkovnu
 
-Skript umožňuje pouze výběr pobočky - zásilku v zásilkovně si stále musíte vytvořit ručně. Pokud jich máte více, Zásilkovna umožňuje hromadný import z CSV, a Simpleshop zase export objednávek do CSV. Před prvním importem je nutné si v Zásilkovně vytvořit šablonu pro import ze Simpleshopu.
+## Podpora a řešení problémů
 
-## Řešení problémů
+**Časté problémy:**
+- ❌ **Widget se neotevře**: Zkontrolujte platnost API klíče
+- ❌ **Nesprávné parametry**: Ověřte konfigurační hodnoty v HTML kódu
+- ❌ **Mobilní zobrazení**: Zkontrolujte CSS styly pro responzivní design
 
-Pokud widget nefunguje:
-1. Zkontrolujte správnost všech konfiguračních parametrů
-2. Ověřte, že je API klíč platný
-3. Zkontrolujte konzoli prohlížeče (F12) pro chybové hlášky
-4. Ujistěte se, že je Zásilkovna vybrána jako způsob dopravy
+**Debugging:**
+- Otevřete vývojářské nástroje (F12) → Console
+- Zkontrolujte chybové hlášky
+- Ověřte, že je vybrána doprava "Zásilkovna"
+
+---
+
+**Technická podpora**: https://www.mediatoring.cz
+
+*Poznámka: Integrace umožňuje pouze výběr pobočky. Vytvoření zásilky v systému Zásilkovny musíte provést ručně nebo pomocí CSV importu.*
