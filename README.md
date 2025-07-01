@@ -226,3 +226,22 @@ Vložte následující kód do záložky *Ostatní* → *JS, CSS a jiné kódy* 
 **Technická podpora**: https://www.mediatoring.cz
 
 *Poznámka: Integrace umožňuje pouze výběr pobočky. Vytvoření zásilky v systému Zásilkovny musíte provést ručně nebo pomocí CSV importu.*
+
+### Podmínky použití
+
+- ✅ **Komerční použití povoleno** - Můžete kód používat v komerčních projektech
+- ✅ **Modifikace povolena** - Smíte kód upravovat podle svých potřeb
+- ✅ **Distribuce povolena** - Můžete kód sdílet s ostatními
+- ✅ **Soukromé použití** - Volné použití pro osobní projekty
+
+**Povinnosti:**
+- 📝 Zachovat copyright notice při distribuci
+- 📝 Přiložit kopii licence při šíření
+
+**Omezení:**
+- ❌ Žádná záruka funkčnosti
+- ❌ Autoři nenesou odpovědnost za škody
+
+### Uznání autorství
+
+Pokud tento kód používáte ve svém projektu, budeme rádi za uvedení odkazu na původní repozitář nebo na **www.mediatoring.cz**.
