@@ -158,10 +158,16 @@ Vložte následující kód do záložky *Ostatní* → *JS, CSS a jiné kódy* 
     var packetaOptions = {
         language: 'cs',
         country: 'cz',
-        vendors: [
+                vendors: [
             {
                 country: 'cz',
-                group: ''  // normální výdejny Zásilkovny
+                group: ''
+            },
+            // Přidali jsme 'zbox' do seznamu povolených skupin, aby se zobrazily i výdejní boxy.
+            // Pokud Zboxy nechce, odstraňte následující 4 řádky od { po } a současně raději i čárku za }, o dva řádky výš
+            {
+                country: 'cz',
+                group: 'zbox'
             }
         ]
     };
