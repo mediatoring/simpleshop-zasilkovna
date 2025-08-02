@@ -164,7 +164,7 @@ Vložte následující kód do záložky *Ostatní* → *JS, CSS a jiné kódy* 
                 group: ''
             },
             // Přidali jsme 'zbox' do seznamu povolených skupin, aby se zobrazily i výdejní boxy.
-            // Pokud Zboxy nechce, odstraňte následující 4 řádky od { po } a současně raději i čárku za }, o dva řádky výš
+            // Pokud Zboxy nechcete, odstraňte následující 4 řádky od { po } a současně raději i čárku za }, o dva řádky výš
             {
                 country: 'cz',
                 group: 'zbox'
